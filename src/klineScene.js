@@ -26,7 +26,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:1000,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -312,6 +312,13 @@ var KLineScene = SceneBase.extend(
 		this.resumeLowerLayer();
 		gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
 		//分享函数
+		this.share();
+		
+	},
+	
+	share:function()
+	{
+		 window.location.href="myapp:myfunction:share";//"javascript:gotoshare()"; 
 	},
 	
 	beginReplayKLineScene:function()

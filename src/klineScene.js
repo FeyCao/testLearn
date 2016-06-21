@@ -229,6 +229,7 @@ var KLineScene = SceneBase.extend(
 	
 	messageCallBack:function(message)
 	{
+		console.log("KlineScene messageCallBack..." + message);
 		var packet=Packet.prototype.Parse(message);
 		var self=gKlineScene;
 		if(packet==null) return;
@@ -386,12 +387,13 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
 		{
+			//TEST
 			var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
 			if(TEST_FLAG != true)
 			{
 				this.setDataForLlineLayer();
 			}else{
-				this.setDataForLlineLayer();
+				this.setDataForLlineLayerTEST();
 			}
 		}
 		else
@@ -465,7 +467,7 @@ var KLineScene = SceneBase.extend(
 		this.setCountDownSprite();
 	},
 	//TEST
-	setDataForLlineLayer:function()
+	setDataForLlineLayerTEST:function()
 	{
 		if(this.klinedataMain==null || this.prevKlineData==null) return;
 		
@@ -478,7 +480,7 @@ var KLineScene = SceneBase.extend(
 		{
 			this.matchInfoLayer.disableAllButtons();
 		}
-		this.setCountDownSprite();
+		this.advanceToMainKLine_Phase();
 	},
 	
 	countDownSprite:null,
@@ -495,7 +497,7 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.countDownSprite==null)
 		{
-			this.countDownNumber=2;
+			this.countDownNumber=5;
 			//this.countDownSprite= cc.Sprite.create("res/cd_5.png");
 			this.countDownSprite= cc.LabelTTF.create(this.countDownNumber,"Arial",100);
 			this.addChild(this.countDownSprite,8);
@@ -553,14 +555,7 @@ var KLineScene = SceneBase.extend(
 		//var self=this; 
 		//setTimeout(function(){self.advanceToMainKLine_Phase2();},500);
 		
-		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
-		if(TEST_FLAG != true)
-		{
-			this.advanceToMainKLine_Phase2();
-		}else{
-			this.advanceToMainKLine_Phase();
-		}
-		
+		this.advanceToMainKLine_Phase2();
 	},
 	
 	///得到当前的K线图的层

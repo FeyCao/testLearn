@@ -300,6 +300,15 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.sellCloseButton.setVisible(false);
 		this.btnAgain.setVisible(false);
 		this.btnShare.setVisible(false);
+
+		//TEST
+		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
+		if(TEST_FLAG != true)
+		{
+			this.speedControlLayer.setVisible(true);
+		}else{
+			this.speedControlLayer.setVisible(false);
+		}
 	},
 	
 	//将按钮设置为空仓的状态
@@ -409,11 +418,7 @@ var MatchInfoLayer= cc.Layer.extend({
 	
 	setReplayKLineScene:function()
 	{
-		this.scBackgroundSprite.setVisible(false);
-		this.scPlayCheckButton.setVisible(false);
-		this.scHalfCheckButton.setVisible(false);
-		this.scNormalCheckButton.setVisible(false);
-		this.scDoubleCheckButton.setVisible(false);
+		this.speedControlLayer.setVisible(false);
 		this.btnAgain.setVisible(true);
 		this.btnShare.setVisible(true);
 	},

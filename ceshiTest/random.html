@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--<html manifest="随机数.appcache">-->
+<html>
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" /> 
+<head>
+    <title>随机数测试</title>
+</head>
+
+<body>
+
+<p id="demo">Click the button to display a random number.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+	//parseInt(Math.random()*(上限-下限+1)+下限); 
+	function myFunction(){
+		function fRandomBy(under, over){ 
+			switch(arguments.length){
+				case 1:return parseInt(Math.random()*under+1);//返回1到任意数under的随机数
+				case 2:return parseInt(Math.random()*(over-under+1)+under);//返回under到over的随机数
+				default:return 0;
+			}
+		}
+		var txt = "||";
+		for(var i=0;i<5;i++){
+			txt = txt + "<br>" + fRandomBy(10,15) + "=====" + fRandomBy(5);　　//输出指定范围内的随机数的随机整数
+		}
+		document.getElementById("demo").innerHTML = txt;
+	}
+</script>
+
+</body>
+</html>

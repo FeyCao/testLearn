@@ -195,13 +195,13 @@ var TempLoadScene = SceneBase.extend(
 		
 		var self=this;
 		var endTime=new Date().getTime();
-		if(endTime-loadTime>2000)
+		if(endTime-loadTime>5000)
 		{
 			this.moveToNextSceneCallBack();
 		}
 		else
 		{
-			setTimeout(function(){self.moveToNextSceneCallBack(),2000-(endTime-loadTime);});
+			setTimeout(function(){self.moveToNextSceneCallBack(),5000-(endTime-loadTime);});
 		}
 	},
 	

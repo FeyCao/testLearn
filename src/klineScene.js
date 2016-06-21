@@ -26,7 +26,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:1000,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:100,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -34,8 +34,6 @@ var KLineScene = SceneBase.extend(
 	volumnTechLayerNumber:4,//下方的技术指标的层号
 	
 	onEnteredFunction:null,	//OnEnter调用结束后的Function
-	
-	
 	
 	ctor: function ()
 	{
@@ -141,9 +139,7 @@ var KLineScene = SceneBase.extend(
 		this.matchEndInfoLayer.setVisible(false);
 		this.matchEndInfoLayer.setPosition((size.width-this.matchEndInfoLayer.width) / 2, (size.height-this.matchEndInfoLayer.height) / 2);  
 		this.otherMessageTipLayer.addChild(this.matchEndInfoLayer, 1,this.matchEndInfoLayer.getTag());
-		
-		//TEST
-		//this.showMatchEndInfo("TEST");
+
 		
 		if(this.onEnteredFunction!=null)
 		{
@@ -155,6 +151,7 @@ var KLineScene = SceneBase.extend(
 	changeTechLayer:function()
 	{
 		console.log("klinescene changeTechLayer instanceid="+this.__instanceid);
+		
 		if(this.phase2==false)
 		{
 			if(this.volumnTechLayerPrev.isTaisEnabled("MACD")==true)
@@ -180,11 +177,13 @@ var KLineScene = SceneBase.extend(
 		{
 			if(this.volumnTechLayerMain.isTaisEnabled("MACD")==true)
 			{
+				console.log("====changeTechLayer to ma");
 				//如果MACD是激活的，则切换到"MA"
 				this.volumnTechLayerMain.changeToOtherTais(["MA"]);
 			}
 			else if(this.volumnTechLayerMain.isTaisEnabled("MA")==true)
 			{
+				console.log("====changeTechLayer to macd");
 				this.volumnTechLayerMain.changeToOtherTais(["MACD"]);
 			}
 			
@@ -308,8 +307,8 @@ var KLineScene = SceneBase.extend(
 	matchEndInfoLayer_Share:function()
 	{
 		//分享
-		this.matchEndInfoLayer.hideLayer();
-		this.resumeLowerLayer();
+		//this.matchEndInfoLayer.hideLayer();
+		//this.resumeLowerLayer();
 		gSocketConn.UnRegisterEvent("onmessage",this.messageCallBack);
 		//分享函数
 		this.share();
@@ -320,6 +319,8 @@ var KLineScene = SceneBase.extend(
 	{
 		 window.location.href="myapp:myfunction:share";//"javascript:gotoshare()"; 
 	},
+	
+	
 	
 	beginReplayKLineScene:function()
 	{
@@ -385,7 +386,13 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.klineLayerMain!=null && this.klineLayerPrev!=null)
 		{
-			this.setDataForLlineLayer();
+			var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
+			if(TEST_FLAG != true)
+			{
+				this.setDataForLlineLayer();
+			}else{
+				this.setDataForLlineLayer();
+			}
 		}
 		else
 		{
@@ -457,6 +464,22 @@ var KLineScene = SceneBase.extend(
 		}
 		this.setCountDownSprite();
 	},
+	//TEST
+	setDataForLlineLayer:function()
+	{
+		if(this.klinedataMain==null || this.prevKlineData==null) return;
+		
+		this.phase2=false;
+		this.klineLayerPrev.drawAllCandlesTillIndexOrEnd();
+		this.volumnTechLayerPrev.drawAllCandlesTillIndexOrEnd();
+		console.log("drawAllCandlesTillIndexOrEnd Over....");
+		
+		if(this.matchInfoLayer!=null)
+		{
+			this.matchInfoLayer.disableAllButtons();
+		}
+		this.setCountDownSprite();
+	},
 	
 	countDownSprite:null,
 	countDownNumber:null,
@@ -472,7 +495,7 @@ var KLineScene = SceneBase.extend(
 		
 		if(this.countDownSprite==null)
 		{
-			this.countDownNumber=5;
+			this.countDownNumber=2;
 			//this.countDownSprite= cc.Sprite.create("res/cd_5.png");
 			this.countDownSprite= cc.LabelTTF.create(this.countDownNumber,"Arial",100);
 			this.addChild(this.countDownSprite,8);
@@ -530,7 +553,14 @@ var KLineScene = SceneBase.extend(
 		//var self=this; 
 		//setTimeout(function(){self.advanceToMainKLine_Phase2();},500);
 		
-		this.advanceToMainKLine_Phase2();
+		var TEST_FLAG=TestClass.getConstant('TEST_FLAG');
+		if(TEST_FLAG != true)
+		{
+			this.advanceToMainKLine_Phase2();
+		}else{
+			this.advanceToMainKLine_Phase();
+		}
+		
 	},
 	
 	///得到当前的K线图的层
@@ -564,12 +594,33 @@ var KLineScene = SceneBase.extend(
 		this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
 			
 		this.matchInfoLayer.setButtonsToNoPosition();
+		
+		
 		//先画前面的部分
 		this.drawHistoryCandlePart();
 		//依次画后面的K线
 		this.drawCandlesOneByOne();
 	},
 	
+	//TEST
+	advanceToMainKLine_Phase:function()
+	{
+		this.phase2=true;
+
+		this.klineLayerPrev.removeFromParent(false);
+		this.volumnTechLayerPrev.removeFromParent(false);
+		
+		//设置主K线图的数据
+		this.klineLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
+		this.addChild(this.klineLayerMain,this.mainLayerNumber,this.klineLayerMain.getTag());
+		
+		//设置附图的数据
+		this.volumnTechLayerMain.setKLineData(this.klinedataMain,this.prevKlineData);
+		this.addChild(this.volumnTechLayerMain,this.volumnTechLayerNumber,this.volumnTechLayerMain.getTag());
+			
+		//一次性画出当前数据图
+		this.drawCandlesAll();
+	},
 	
 	drawHistoryCandlePart:function()
 	{
@@ -605,6 +656,19 @@ var KLineScene = SceneBase.extend(
 		var self=this; 
 		setTimeout(function(){self.drawCandlesOneByOne();},this.currentCandleDrawInterval);
 	},
+	
+	//TEST 一次性画出用户数据图
+	drawCandlesAll:function()
+	{	
+	
+		this.klineLayerMain.drawAllCandlesAll();
+		this.volumnTechLayerMain.drawAllCandlesAll();
+		this.currentCandleIndex=this.klinedataMain.length;
+		
+		//隐藏下方的按钮
+		//console.log("drawCandlesAll this.currentCandleIndex = ",this.currentCandleIndex);
+	},
+	
 	
 	sendEndMessage:function()
 	{
@@ -648,7 +712,6 @@ var KLineScene = SceneBase.extend(
 	},
 	
 				
-	
 	refreshScores:function(indexEnd)
 	{
 		if(indexEnd==null)

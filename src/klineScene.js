@@ -660,10 +660,33 @@ var KLineScene = SceneBase.extend(
 		this.volumnTechLayerMain.drawAllCandlesAll();
 		this.currentCandleIndex=this.klinedataMain.length;
 		
-		//隐藏下方的按钮
+		//画出买卖操作的信息
+		this.businessInfo();
 		//console.log("drawCandlesAll this.currentCandleIndex = ",this.currentCandleIndex);
 	},
-	
+	//
+	businessInfo:function()
+	{
+		console.log("businessInfo:function() begin= ");
+		if(this.phase2==false)return;
+		
+		
+		
+		var businessInfo = TestClass.getConstant('TEST_DATA');
+		for (i=0;i<businessInfo.length;i++)
+		{
+			console.log("businessInfo[" + i + "] = " + businessInfo[i]);
+			this.selfOperations.push(businessInfo[i]);
+			this.refreshScores(Math.abs(businessInfo[i]));
+			if(businessInfo[i]>0)
+			{
+				this.klineLayerMain.setUpArrowIndex(Math.abs(businessInfo[i]),(this.selfOperations.length%2==1));
+			}else{
+				this.klineLayerMain.setDownArrowIndex(Math.abs(businessInfo[i]),(this.selfOperations.length%2==1));
+			}
+		}
+		
+	},
 	
 	sendEndMessage:function()
 	{

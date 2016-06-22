@@ -371,8 +371,7 @@ var BaseGraphLayer= cc.Layer.extend({
 		{
 			this.drawSingleDayGraphInfos(i);
 		}
-		//this.redrawExceptCandles();
-		//this.drawSingleCandleLineByCurrentIndex(this.klineData.length-1);
+		this.redrawExceptCandles();
 	},
 	
 	///立刻显示所有的蜡烛，该函数仅用在显示历史数据时
